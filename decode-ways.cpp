@@ -1,41 +1,32 @@
-class Solution {
-public:
+//91 
 
-    int decode(string s,int cur,int *DP){
-	if(cur > s.size())
-		return 0;
-	else if(cur==s.size()|| cur==s.size()-1){
-		if (s[cur]!='0')
-			return 1;
-		else return 0;
-	}
+int f(string &s, int i, vector <int> &mem){
+	if (i == s.size())
+		return 1;
+    else if (mem[i] != -1)
+        return mem[i];
 	else{
-		if (DP[cur]!=-1)
-			return DP[cur];
-		
-		int first_only=0,both=0;
-		if (s[cur]!='0')
-			first_only = decode(s,cur+1,DP); //considering only first digit
-		if (cur+2<=s.size() && s[cur]!='0'){
-			int t = stoi(string(s,cur,2));
-			if (t>0 && t<27)
-				both = decode(s,cur+2,DP);
-		}
 
-		DP[cur] = first_only + both;
-		return DP[cur];
-	
+        if (s[i] == '0')
+            return 0;
+        int single_ch = f(s,i+1, mem);
 
+        int double_ch = 0;
+        if (i+1 < s.size()){
+            int val = 10*(s[i] - '0') + (s[i+1] - '0');
+            if (val <= 26){
+                double_ch = f(s,i+2, mem);
+            }
+        }
+        mem[i] = (single_ch + double_ch);
+        return mem[i];
+        
+        
 	}
-
+	
 }
-    int numDecodings(string s) {
-        	int *DP;
-	DP = new int[s.size()];
 
-	for (int i=0;i<s.size();i++)
-		DP[i] = -1;
-
-        return decode(s,0,DP);   
-    }
-};
+int numDecodings(string s) {
+    vector <int> mem(s.size(), -1);
+    return f(s, 0, mem);
+}
