@@ -6,11 +6,11 @@ int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {
 
 	int res = INT_MIN;
 
-	for (int i=0;i<n;i++){
-		vector <int> cum(m, 0);
-		for (int j=i;j<n;j++){
-			for(int y=0;y<m;y++){
-				cum[y] += matrix[j][y];
+	for (int i=0;i<m;i++){
+		vector <int> cum(n, 0);
+		for (int j=i;j<m;j++){
+			for(int y=0;y<n;y++){
+				cum[y] += matrix[y][j];
 			}
 
 			set <int> acc;
@@ -20,7 +20,7 @@ int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {
 			for (int x:cum){
 				sum += x;
 				auto it = acc.lower_bound(sum-k);//first-value >= sum-k
-				if (it!-acc.end()){
+				if (it!=acc.end()){
 					res = max(res, sum-*it);
 				}
 				acc.insert(sum);
@@ -28,5 +28,5 @@ int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {
 		}
 	}
 
-	return sum;
+	return res;
 }
